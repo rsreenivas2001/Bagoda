@@ -388,6 +388,13 @@ def booking_make(request):
     path = role + "/"
 
     room = Room.objects.get(number=request.POST.get("roomid"))
+    bookings = Booking.objects.all()
+    booking_dates = []
+    for booking in bookings:
+        booking_dates.append(
+            [datetime.strptime(str(booking.startDate), "%Y-%m-%d"), datetime.strptime(str(booking.endDate), "%Y-%m-%d")]
+        )
+    print(booking_dates)
     guests = Guest.objects.all()  # we pass this to context
     names = []
     if request.method == 'POST':
@@ -398,6 +405,12 @@ def booking_make(request):
             str(request.POST.get("fd")), "%Y-%m-%d")
         end_date = datetime.strptime(
             str(request.POST.get("ld")), "%Y-%m-%d")
+        for booking_date in booking_dates:
+            booked_start_date = booking_date[0]
+            if booked_start_date == start_date:
+                messages.error(request, "There is a booking in the interval!")
+                return redirect("rooms")
+            
         numberOfDays = abs((end_date-start_date).days)
         extra_price = 1
 
