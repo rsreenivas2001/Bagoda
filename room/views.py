@@ -394,7 +394,6 @@ def booking_make(request):
         booking_dates.append(
             [datetime.strptime(str(booking.startDate), "%Y-%m-%d"), datetime.strptime(str(booking.endDate), "%Y-%m-%d")]
         )
-    print(booking_dates)
     guests = Guest.objects.all()  # we pass this to context
     names = []
     if request.method == 'POST':
@@ -407,33 +406,16 @@ def booking_make(request):
             str(request.POST.get("ld")), "%Y-%m-%d")
         for booking_date in booking_dates:
             booked_start_date = booking_date[0]
-            if booked_start_date == start_date:
+            booked_end_date = booking_date[1]
+
+            if booked_start_date <= start_date <= booked_end_date:
                 messages.error(request, "There is a booking in the interval!")
                 return redirect("rooms")
             
         numberOfDays = abs((end_date-start_date).days)
-        extra_price = 1
-
-        # price change based on booking season
-        if start_date.month in range(2, 3): 
-            extra_price += 0.10
-        elif start_date.month in range(3, 6):
-            extra_price += 0.30
-        elif start_date.month in range(6, 10):
-            extra_price += 0
-        elif start_date.month in range(10, 12):
-            extra_price += 0.20
-        else:
-            extra_price += 0.25
-
-        # price change based on booking day ( weekday / weekend )
-        if start_date.weekday() >= 5:
-            extra_price += 0.05
-
-
         # get room peice:
         price = room.price
-        total = round(price * numberOfDays * extra_price,2)
+        total = price * numberOfDays
 
         if 'add' in request.POST:  # add dependee
             name = request.POST.get("depName")
@@ -468,8 +450,7 @@ def booking_make(request):
         "guests": guests,
         "room": room,
         "total": total,
-        "names": names,
-        "seasonal_charge": round((extra_price - 1) * room.price, 2 )
+        "names": names
     }
 
     return render(request, path + "booking-make.html", context)
