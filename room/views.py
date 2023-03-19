@@ -482,6 +482,14 @@ def deleteBooking(request, pk):
     path = role + "/"
 
     booking = Booking.objects.get(id=pk)
+    start_date = booking.startDate
+    current_date = date.today()
+
+    if role == "guest":
+        delta = start_date - current_date
+        if delta.days < 3:
+            return redirect('guest-profile', uid)
+
     if request.method == "POST":
         booking.delete()
         return redirect('guest-profile', uid)
