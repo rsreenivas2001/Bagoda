@@ -121,11 +121,10 @@
                             <td>{{bo.numOfResidents}}</td>
 
                             {% if role == "guest"%}
-                            <form action="{% url 'request-refund' %}" method="POST">
+                            <form action="{% url 'deleteBooking' bo.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{bo.id}}" name="bookingId">
-                                <td><button type="submit" class="btn btn-outline-success btn-lg " name="refReq">Send
-                                        Refund Request</button></td>
+                                <td><button type="submit" class="btn btn-outline-success btn-lg " name="refReq">Cancel Booking</button></td>
                             </form>
                             {% endif %}
                         </tr>

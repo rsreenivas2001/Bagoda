@@ -459,12 +459,13 @@ def booking_make(request):
 @login_required(login_url='login')
 def deleteBooking(request, pk):
     role = str(request.user.groups.all()[0])
+    uid = str(request.user.id)
     path = role + "/"
 
     booking = Booking.objects.get(id=pk)
     if request.method == "POST":
         booking.delete()
-        return redirect('bookings')
+        return redirect('guest-profile', uid)
 
     context = {
         "role": role,
