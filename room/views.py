@@ -413,9 +413,26 @@ def booking_make(request):
                 return redirect("rooms")
             
         numberOfDays = abs((end_date-start_date).days)
+        extra_price = 1
+
+        # price change based on booking season
+        if start_date.month in range(2, 3): 
+            extra_price += 0.10
+        elif start_date.month in range(3, 6):
+            extra_price += 0.30
+        elif start_date.month in range(6, 10):
+            extra_price += 0
+        elif start_date.month in range(10, 12):
+            extra_price += 0.20
+        else:
+            extra_price += 0.25
+
+        # price change based on booking day ( weekday / weekend )
+        if start_date.weekday() >= 5:
+            extra_price += 0.05
         # get room peice:
         price = room.price
-        total = price * numberOfDays
+        total = round(price * numberOfDays * extra_price,2)
 
         if 'add' in request.POST:  # add dependee
             name = request.POST.get("depName")
@@ -450,7 +467,9 @@ def booking_make(request):
         "guests": guests,
         "room": room,
         "total": total,
-        "names": names
+        "names": names,
+        "seasonal_charge": round((extra_price - 1) * room.price, 2 ),
+        "commission": total*0.01
     }
 
     return render(request, path + "booking-make.html", context)

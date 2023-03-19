@@ -17,9 +17,13 @@
             Room price : {{ room.price }}
             <br>
             Seasonal charge : {{ seasonal_charge }}
+            {% if role == "receptionist" %}
+            <br>
+            Agent's Commission : {{ commission }}
+            {% endif %}
             <br>
             <br>
-            Total price : {{total}}
+            Total price : {{ total }}
         </p>
     </div>
 
