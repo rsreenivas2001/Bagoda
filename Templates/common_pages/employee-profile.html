@@ -58,18 +58,31 @@
                 </div>
 
                 <br>
-
+                {%  if role != "receptionist" %}
                 <div class="p-2 h4">
                     <span>Role :</span>
                     <span class="font-weight-normal">{{employee.user.groups.first}}</span>
                 </div>
-
+                {% else %}
+                <div class="p-2 h4">
+                    <span>Role :</span>
+                    <span class="font-weight-normal">Agent</span>
+                </div>
+                {% endif %}
                 <br>
 
+
+                {%  if role != "receptionist" %}
                 <div class="p-2 h4">
-                    <span>Salary:</span>
+                    <span>Salary: </span>
                     <span class="font-weight-normal">{{employee.salary}}</span>
                 </div>
+                {% else %}
+                <div class="p-2 h4">
+                    <span>Commision:</span>
+                    <span class="font-weight-normal">1%</span>
+                </div>
+                {% endif %}
 
             </div>
         </div>

@@ -45,7 +45,7 @@ class editGuest(ModelForm):
 class ROLES(forms.Form):
     ROLES_TYPES = [
         ('manager', 'manager'),
-        ('receptionist', 'receptionist'),
+        ('receptionist', 'agent'),
         ('staff', 'staff'),
     ]
     ROLES_TYPES = forms.CharField(

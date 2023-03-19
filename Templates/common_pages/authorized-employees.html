@@ -40,12 +40,17 @@
         </thead>
         <tbody>
             {% for employee in employees %}
+
             <tr>
                 <td>{{ employee.user.id }}</td>
                 <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
                 <td>{{ employee.user.email }}</td>
                 <td>{{ employee.phoneNumber }}</td>
+                {% if employee.user.groups.first.name != "receptionist" %}
                 <td>{{ employee.user.groups.first }}</td>
+                {% else %}
+                <td>Agent</td>
+                {% endif %}
                 <td> <a href="{% url 'employee-profile' employee.user.id  %}"
                         class="btn btn-sm btn-info w-100">Detail</a>
                 </td>

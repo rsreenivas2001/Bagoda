@@ -468,7 +468,8 @@ def booking_make(request):
         "room": room,
         "total": total,
         "names": names,
-        "seasonal_charge": round((extra_price - 1) * room.price, 2 )
+        "seasonal_charge": round((extra_price - 1) * room.price, 2 ),
+        "commission": total*0.01
     }
 
     return render(request, path + "booking-make.html", context)
