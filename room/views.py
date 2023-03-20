@@ -493,8 +493,10 @@ def deleteBooking(request, pk):
 
     if request.method == "POST":
         booking.delete()
-        return redirect('guest-profile', uid)
-
+        if role == "guest":
+            return redirect('guest-profile', uid)
+        return redirect('bookings')
+    
     context = {
         "role": role,
         'booking': booking
