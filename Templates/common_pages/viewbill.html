@@ -1,0 +1,28 @@
+<div class="row justify-content-center m-5">
+
+    <div class="card border-danger shadow-lg w-75">
+
+        <div class="card-body">
+
+            <p>Here is your bill</p> <br>
+            <p>Room number : {{ booking.roomNumber.number }} </p>
+            <p>Guest name : {{ booking.guest.user.first_name }} {{ booking.guest.user.last_name }}</p>
+            <p>from {{ booking.startDate }} to {{ booking.endDate }}</p><br>
+            <p>Total Room Amount : {{ roomtotal }}</p>
+            <p>Total Service Cost : {{ service }}</p>
+            <p>Total Bill Amount : {{ total }}</p><br>
+            <p>Amount paid at Time of Registration : {{ paid }}</p>
+            <p>Amount to be paid at Time of Checkout : {{ topay }}</p>
+            <form action="{% url 'viewbill' booking.id %}" method="post">
+                {% csrf_token %}
+                <a class="btn btn-info" href="{% url 'bookings' %}">Cancel</a>
+
+                <input class="btn btn-danger" type="submit" value="Confirm">
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+&nbsp

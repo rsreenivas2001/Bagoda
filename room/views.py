@@ -539,6 +539,60 @@ def deleteBooking(request, pk):
     return render(request, path + "deleteBooking.html", context)
 
 
+@login_required(login_url='login')
+def viewbill(request,pk):
+    role = str(request.user.groups.all()[0])
+    uid = str(request.user.id)
+    path = role + "/"
+
+    booking = Booking.objects.get(id=pk)
+    curoomservices = RoomServices.objects.filter(curBooking=booking)
+
+    start_date = booking.startDate
+    end_date = booking.endDate
+    number_of_days = abs((end_date - start_date).days)
+    room = Room.objects.get(number=booking.roomNumber.number)
+    if request.method == "POST":
+
+        return redirect('bookings')
+
+    extra_price = 1
+
+    # price change based on booking season
+    if start_date.month in range(2, 3):
+        extra_price += 0.10
+    elif start_date.month in range(3, 6):
+        extra_price += 0.30
+    elif start_date.month in range(6, 10):
+        extra_price += 0
+    elif start_date.month in range(10, 12):
+        extra_price += 0.20
+    else:
+        extra_price += 0.25
+
+    # price change based on booking day ( weekday / weekend )
+    if start_date.weekday() >= 5:
+        extra_price += 0.05
+    # get room price:
+    price = room.price
+    service_cost = 0
+    for crs in curoomservices:
+        service_cost += crs.price
+    room_total = round(price * number_of_days * extra_price, 2)
+
+    context = {
+        "role": role,
+        'booking': booking,
+        "roomtotal":room_total,
+        "service":service_cost,
+        "total":room_total+service_cost,
+        "paid": room_total * 0.5,
+        "topay": room_total * 0.5 + service_cost
+    }
+    return render(request, path + "viewbill.html", context)
+
+
+
 @ login_required(login_url='login')
 def refunds(request):
     role = str(request.user.groups.all()[0])

@@ -72,4 +72,5 @@ urlpatterns = [
          deleteAnnouncement, name="deleteAnnouncement"),
     path('deleteBooking/<str:pk>/', deleteBooking, name="deleteBooking"),
     path('completeTask/<str:pk>/', completeTask, name="completeTask"),
+    path('viewbill/<str:pk>/', viewbill, name="viewbill"),
 ]
