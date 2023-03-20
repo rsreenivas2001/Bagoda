@@ -330,8 +330,26 @@ def bookings(request):
         end_date = datetime.datetime.strptime(str(booking.endDate), "%Y-%m-%d")
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
+        extra_price = 1
+
+        # price change based on booking season
+        if start_date.month in range(2, 3): 
+            extra_price += 0.10
+        elif start_date.month in range(3, 6):
+            extra_price += 0.30
+        elif start_date.month in range(6, 10):
+            extra_price += 0
+        elif start_date.month in range(10, 12):
+            extra_price += 0.20
+        else:
+            extra_price += 0.25
+
+        # price change based on booking day ( weekday / weekend )
+        if start_date.weekday() >= 5:
+            extra_price += 0.05
+
         price = Room.objects.get(number=booking.roomNumber.number).price
-        total = price * numberOfDays
+        total = round(price * numberOfDays * extra_price,2)        
         totals[booking] = total
 
     if request.method == "POST":
