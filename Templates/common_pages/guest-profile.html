@@ -37,7 +37,7 @@
                         <span>Account Creation Date:</span>
                         <span class="font-weight-normal">{{guest.user.date_joined}}</span>
                     </div>
-
+                </form>
             </div>
 
             <div class="col-6">
@@ -94,6 +94,7 @@
         <br>
 
         <div class="row">
+
             <div class="table-responsive table-striped my-5">
                 <div class="table-header row">
 
@@ -101,6 +102,14 @@
                         <h2>All Past Reservations</h2>
                     </div>
 
+
+                </div>
+                <div id="messages">
+                    {% for m in messages %}
+                    <div class="alert alert-{{m.tags}}">
+                        {{m}}
+                    </div>
+                    {% endfor %}
                 </div>
                 <table class="table table-hover">
                     <thead>

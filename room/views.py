@@ -404,6 +404,7 @@ def bookings(request):
 def booking_make(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
+    current_date =  datetime.strptime(str(date.today()), "%Y-%m-%d")
 
     room = Room.objects.get(number=request.POST.get("roomid"))
     bookings = Booking.objects.filter(roomNumber=request.POST.get("roomid"))
@@ -419,10 +420,22 @@ def booking_make(request):
         if request.POST.get("fd") == "" or request.POST.get("ld") == "":
             return redirect("rooms")
 
+
         start_date = datetime.strptime(
             str(request.POST.get("fd")), "%Y-%m-%d")
         end_date = datetime.strptime(
             str(request.POST.get("ld")), "%Y-%m-%d")
+        if start_date >= end_date:
+            messages.error(request, "Invalid Dates. Retry!")
+            return redirect("rooms")
+
+        if start_date < current_date:
+            messages.error(request, "Bookings cannot be made for Previous Days!")
+            return redirect("rooms")
+        number_of_days = abs((end_date - start_date).days)
+        if number_of_days > 10:
+            messages.error(request, "Bookings can only be made for a maximum of 10 days!")
+            return redirect("rooms")
         for booking_date in booking_dates:
             booked_start_date = booking_date[0]
             booked_end_date = booking_date[1]
@@ -431,7 +444,7 @@ def booking_make(request):
                 messages.error(request, "There is a booking in the interval!")
                 return redirect("rooms")
             
-        numberOfDays = abs((end_date-start_date).days)
+
         extra_price = 1
 
         # price change based on booking season
@@ -451,7 +464,7 @@ def booking_make(request):
             extra_price += 0.05
         # get room peice:
         price = room.price
-        total = round(price * numberOfDays * extra_price,2)
+        total = round(price * number_of_days * extra_price,2)
 
         if 'add' in request.POST:  # add dependee
             name = request.POST.get("depName")
@@ -507,6 +520,7 @@ def deleteBooking(request, pk):
     if role == "guest":
         delta = start_date - current_date
         if delta.days < 3:
+            messages.error(request, "Sorry , You cannot cancel booking within 3 days of Check-in Date!")
             return redirect('guest-profile', uid)
 
     if request.method == "POST":

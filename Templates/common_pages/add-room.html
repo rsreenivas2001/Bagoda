@@ -29,7 +29,22 @@
 
                 <div class="form-group">
                     <label for="item-quantity"><b>Room Type:</b></label>
-                    <input type="int" class="form-control border border-secondary" id="item-quantity" name="type" />
+{#                    <input type="int" class="form-control border border-secondary" id="item-quantity" name="type" />#}
+                    <select name="type" required="" id="item-quantity"
+                            class="form-control border border-secondary">
+
+                            <option value="King" {% if room.roomType == 'King' %} selected {% endif %}>King</option>
+
+                            <option value="Luxury" {% if room.roomType == 'Luxury' %} selected {% endif %}>Luxury
+                            </option>
+
+                            <option value="Normal" {% if room.roomType == 'Normal' %} selected {% endif %}>Normal
+                            </option>
+
+                            <option value="Economic" {% if room.roomType == 'Economic' %} selected {% endif %}>Economic
+                            </option>
+
+                        </select>
                 </div>
             </div>
         </div>
