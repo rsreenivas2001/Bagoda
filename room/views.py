@@ -388,7 +388,8 @@ def booking_make(request):
     path = role + "/"
 
     room = Room.objects.get(number=request.POST.get("roomid"))
-    bookings = Booking.objects.all()
+    bookings = Booking.objects.filter(roomNumber=request.POST.get("roomid"))
+    print(bookings)
     booking_dates = []
     for booking in bookings:
         booking_dates.append(
