@@ -443,8 +443,12 @@ def booking_make(request):
             if booked_start_date <= start_date <= booked_end_date:
                 messages.error(request, "There is a booking in the interval!")
                 return redirect("rooms")
-            
+            if booked_start_date <= end_date <= booked_end_date:
+                messages.error(request, "There is a booking in the interval!")
+                return redirect("rooms")
+                
 
+        numberOfDays = abs((end_date-start_date).days)
         extra_price = 1
 
         # price change based on booking season
